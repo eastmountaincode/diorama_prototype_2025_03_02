@@ -60,6 +60,7 @@ const Radio: React.FC<RadioProps> = ({
         
         // Create click sound audio element (direct HTML Audio API)
         const clickAudio = new Audio('/assets/sounds/click.mp3');
+        clickAudio.volume = 0.3
         clickAudioRef.current = clickAudio;
         
         // Start playing if initially on
@@ -93,7 +94,7 @@ const Radio: React.FC<RadioProps> = ({
             // Using cubic easing for gradual falloff at distance
             // Maximum volume is 80% to avoid being too loud
             const proximityNormalized = radioProximityPercentage / 100;
-            const volumeCurve = Math.pow(proximityNormalized, 1.5) * 0.5;
+            const volumeCurve = Math.pow(proximityNormalized, 1.5) * 0.2;
             
             // Apply volume
             gainNodeRef.current.gain.setTargetAtTime(volumeCurve, audioContextRef.current?.currentTime || 0, 0.1);
@@ -151,7 +152,7 @@ const Radio: React.FC<RadioProps> = ({
     
     return (
         <div
-            className={`absolute transition-all duration-300 ${isPlayerNearby ? 'scale-110' : 'scale-100'}`}
+            className={`absolute transition-all duration-300`}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
@@ -162,14 +163,14 @@ const Radio: React.FC<RadioProps> = ({
             <img
                 src="/assets/radio.png"
                 alt="Radio"
-                className={`w-full object-contain ${isOn ? 'brightness-100' : 'brightness-75'}`}
+                className={`w-full object-contain`}
                 style={{ imageRendering: 'auto' }}
             />
 
             {/* Interaction hint */}
             {isPlayerNearby && (
                 <div 
-                    className="absolute left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs whitespace-nowrap z-10" 
+                    className="absolute left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-2 py-1 text-xs whitespace-nowrap z-10" 
                     style={{ top: '-25px' }}
                 >
                     Press E to {isOn ? 'turn off' : 'turn on'}

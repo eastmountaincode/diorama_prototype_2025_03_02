@@ -5,6 +5,7 @@ import DebugPanel from './DebugPanel';
 import MovementController from '../../util/MovementController';
 import { TrapezoidBoundaries } from '../../types/boundaries';
 import Radio from './Radio';
+import Synth from './Synth/Synth';
 
 interface WalkableAreaProps {
   trapezoid: TrapezoidBoundaries;
@@ -13,7 +14,7 @@ interface WalkableAreaProps {
 
 export type MovementDirection = 'left' | 'right' | 'standing';
 
-const WalkableArea: React.FC<WalkableAreaProps> = ({ 
+const WalkableArea: React.FC<WalkableAreaProps> = ({
   trapezoid,
   debug = false
 }) => {
@@ -21,13 +22,19 @@ const WalkableArea: React.FC<WalkableAreaProps> = ({
   const [position, setPosition] = useState(movementController.calculateStartPosition());
 
   // Radio position
-  const radioPosition = { x: 480, y: 370 }; // Adjust this position as needed
+  const radioPosition = { x: 480, y: 370 };
+
+  const synthPosition = { x: 220, y: 400 };
 
   // Define the maximum distance for radio detection
   const MAX_RADIO_DISTANCE = 350; // Pixels
+  const MAX_SYNTH_DISTANCE = 40; // How close the player needs to be
+
 
   // Interaction state
   const [isNearRadio, setIsNearRadio] = useState(false);
+  const [isNearSynth, setIsNearSynth] = useState(false);
+
   const [radioProximityPercentage, setRadioProximityPercentage] = useState(0);
 
 
@@ -38,38 +45,50 @@ const WalkableArea: React.FC<WalkableAreaProps> = ({
     left: false,
     right: false
   });
-  
+
   // Track character direction
   const [direction, setDirection] = useState<MovementDirection>('standing');
 
   // Check distance to radio
   useEffect(() => {
     const distanceToRadio = Math.sqrt(
-      Math.pow(position.x - radioPosition.x, 2) + 
+      Math.pow(position.x - radioPosition.x, 2) +
       Math.pow(position.y - radioPosition.y, 2)
     );
-    
+
     // Calculate proximity percentage - closer means higher percentage
     const rawPercentage = 100 - (distanceToRadio / MAX_RADIO_DISTANCE) * 100;
-    
+
     // Clamp between 0-100%
     const clampedPercentage = Math.max(0, Math.min(100, rawPercentage));
-    
+
     setRadioProximityPercentage(Math.round(clampedPercentage));
-    
-    // Player is near radio if distance is less than 50 pixels
-    setIsNearRadio(distanceToRadio < 50);
+
+    // Player is near radio if distance is less than 40 pixels
+    setIsNearRadio(distanceToRadio < 40);
   }, [position, radioPosition]);
+
+  // Check if player is near the synth
+  useEffect(() => {
+    const distanceToSynth = Math.sqrt(
+      Math.pow(position.x - synthPosition.x, 2) +
+      Math.pow(position.y - synthPosition.y, 2)
+    );
+
+    // Player is near synth if distance is less than threshold
+    setIsNearSynth(distanceToSynth < MAX_SYNTH_DISTANCE);
+  }, [position, synthPosition]);
+
 
   // Check if player is near the radio
   useEffect(() => {
     const distanceToRadio = Math.sqrt(
-      Math.pow(position.x - radioPosition.x, 2) + 
+      Math.pow(position.x - radioPosition.x, 2) +
       Math.pow(position.y - radioPosition.y, 2)
     );
-    
-    // Player is near radio if distance is less than 50 pixels
-    setIsNearRadio(distanceToRadio < 50);
+
+    // Player is near radio if distance is less than X pixels
+    setIsNearRadio(distanceToRadio < 40);
   }, [position, radioPosition]);
 
   // Handle key events
@@ -125,7 +144,7 @@ const WalkableArea: React.FC<WalkableAreaProps> = ({
     const moveInterval = setInterval(() => {
       setPosition(currentPos => {
         let newPos = { ...currentPos };
-        
+
         if (keys.up) {
           newPos = movementController.calculateNewPosition(newPos, 'up');
         }
@@ -140,7 +159,7 @@ const WalkableArea: React.FC<WalkableAreaProps> = ({
           newPos = movementController.calculateNewPosition(newPos, 'right');
           setDirection('right');
         }
-        
+
         return newPos;
       });
     }, 16); // ~60fps
@@ -155,25 +174,30 @@ const WalkableArea: React.FC<WalkableAreaProps> = ({
     <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
       {/* <TrapezoidVisualizer trapezoid={trapezoid} /> */}
       {/* Radio element */}
-      <Radio 
-        position={radioPosition} 
+      <Radio
+        position={radioPosition}
         isPlayerNearby={isNearRadio}
         radioProximityPercentage={radioProximityPercentage}
         debug={debug}
       />
-      
-      <Character 
-        position={position} 
-        direction={direction} 
-        isMoving={isMoving} 
+
+      <Synth
+        position={synthPosition}
+        isPlayerNearby={isNearSynth}
       />
-      
-      {debug && (
-        <DebugPanel 
-          position={position} 
-          trapezoid={trapezoid} 
+
+      <Character
+        position={position}
+        direction={direction}
+        isMoving={isMoving}
+      />
+
+      {/* {debug && (
+        <DebugPanel
+          position={position}
+          trapezoid={trapezoid}
         />
-      )}
+      )} */}
     </div>
   );
 };
