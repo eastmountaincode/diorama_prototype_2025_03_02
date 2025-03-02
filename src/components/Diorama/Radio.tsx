@@ -11,7 +11,7 @@ const Radio: React.FC<RadioProps> = ({
     position, 
     isPlayerNearby,
     radioProximityPercentage,
-    debug = false
+
 }) => {
     // Radio state
     const [isOn, setIsOn] = useState(true);
