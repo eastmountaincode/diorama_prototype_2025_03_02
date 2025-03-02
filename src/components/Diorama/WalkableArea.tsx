@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Character from './Character';
 // import TrapezoidVisualizer from './TrapezoidVisualizer';
-import DebugPanel from './DebugPanel';
+// import DebugPanel from './DebugPanel';
 import MovementController from '../../util/MovementController';
 import { TrapezoidBoundaries } from '../../types/boundaries';
 import Radio from './Radio';
