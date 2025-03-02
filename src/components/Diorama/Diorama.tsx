@@ -14,16 +14,19 @@ const Diorama: React.FC = () => {
   };
 
   return (
-    <div className="diorama-container relative w-[800px] max-w-full mx-auto">
-      {/* Diorama background image */}
-      <img 
-        src="/assets/computer_diorama_sketch_1.png" 
-        alt="Computer Diorama Sketch" 
-        className="w-full h-auto"
-      />
-      
-      {/* WalkableArea containing the Character */}
-      <WalkableArea trapezoid={trapezoid} debug={true} />
+    <div className="diorama-outer-container overflow-x-auto w-full">
+      <div className="diorama-container relative w-[800px] mx-auto" style={{ minWidth: '800px' }}>
+        {/* Diorama background image */}
+        <img 
+          src={`${import.meta.env.BASE_URL}assets/computer_diorama_sketch_1.png`}
+          alt="Computer Diorama Sketch" 
+          className="w-[800px]" 
+          style={{ width: '800px', height: 'auto' }}
+        />
+        
+        {/* WalkableArea containing the Character */}
+        <WalkableArea trapezoid={trapezoid} debug={true} />
+      </div>
     </div>
   );
 };

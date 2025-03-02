@@ -18,7 +18,7 @@ const Synth: React.FC<SynthProps> = ({ position, isPlayerNearby }) => {
       }}
     >
       <img
-        src="/assets/synth/synth.png" 
+        src={`${import.meta.env.BASE_URL}/assets/synth/synth.png`} 
         alt="Synthesizer"
         className="w-full object-contain"
         style={{ imageRendering: 'auto' }}

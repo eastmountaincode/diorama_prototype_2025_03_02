@@ -39,12 +39,12 @@ const Character: React.FC<CharacterProps> = ({ position, direction, isMoving }) 
   const getSpritePath = () => {
     switch (direction) {
       case 'left':
-        return `/assets/little_guy_sprites/walking_left_${frame}_1.png`;
+        return `${import.meta.env.BASE_URL}/assets/little_guy_sprites/walking_left_${frame}_1.png`;
       case 'right':
-        return `/assets/little_guy_sprites/walking_right_${frame}_1.png`;
+        return `${import.meta.env.BASE_URL}/assets/little_guy_sprites/walking_right_${frame}_1.png`;
       case 'standing':
       default:
-        return '/assets/little_guy_sprites/standing_1.png';
+        return `${import.meta.env.BASE_URL}/assets/little_guy_sprites/standing_1.png`;
     }
   };
 
