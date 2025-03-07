@@ -1,32 +1,20 @@
 import React from 'react';
-import { useAtom } from 'jotai';
-import { zoomLevelAtom } from '../atoms/gameState';
 
 const SceneTwo: React.FC = () => {
-    const [zoom] = useAtom(zoomLevelAtom);
-
     return (
-        <div className="h-full overflow-hidden flex items-center justify-center ">
-            <div
+        <div className="h-full flex items-center justify-center">
+            <img
+                src="assets/bg/desert_diorama_t.png"
+                alt="Scene Two BG"
+                width={1500}
+                height={1283}
                 style={{
-                    width: `${1500 * zoom}px`,
-                    height: `${1283 * zoom}px`,
-                    flexShrink: 0,
+                    minWidth: '1500px', // ✅ Prevent shrinking below natural width
+                    minHeight: '1283px', // ✅ Prevent shrinking below natural height
+                    userSelect: 'none',
+                    pointerEvents: 'none',
                 }}
-            >
-                <img
-                    src="assets/bg/desert_diorama_t.png"
-                    alt="Scene Two BG"
-                    width={1500}
-                    height={1283}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        userSelect: 'none',
-                        pointerEvents: 'none',
-                    }}
-                />
-            </div>
+            />
         </div>
     );
 };

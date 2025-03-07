@@ -1,32 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { currentSceneAtom } from '../atoms/gameState';
+import { currentSceneAtom, cameraPositionAtom } from '../atoms/gameState';
 import SceneOne from '../scenes/SceneOne';
 import SceneTwo from '../scenes/SceneTwo';
 
-const SceneManager: React.FC = () => {
+interface SceneManagerProps {
+    canvasRef: React.RefObject<HTMLDivElement | null>;
+}
+
+const SceneManager: React.FC<SceneManagerProps> = ({ canvasRef }) => {
+    const sceneManagerRef = useRef<HTMLDivElement | null>(null);
+    const [transformOrigin, setTransformOrigin] = useState('center center');
     const [currentScene] = useAtom(currentSceneAtom);
-    const [visibleScene, setVisibleScene] = useState(currentScene);
-    const [opacity, setOpacity] = useState(1);
+    const [cameraPos] = useAtom(cameraPositionAtom);
+
+    const updateTransformOrigin = () => {
+        const canvasRect = canvasRef.current?.getBoundingClientRect();
+        const sceneRect = sceneManagerRef.current?.getBoundingClientRect();
+
+        if (canvasRect && sceneRect) {
+            const originX = canvasRect.left + canvasRect.width / 2 - sceneRect.left;
+            const originY = canvasRect.top + canvasRect.height / 2 - sceneRect.top;
+            setTransformOrigin(`${originX}px ${originY}px`);
+        }
+    };
 
     useEffect(() => {
-        setOpacity(0); // start fade-out
+        updateTransformOrigin();
+        window.addEventListener('resize', updateTransformOrigin);
+        return () => window.removeEventListener('resize', updateTransformOrigin);
+    }, []);
 
-        const fadeTimer = setTimeout(() => {
-            setVisibleScene(currentScene); // switch scene halfway
-            setOpacity(1); // fade back in
-        }, 300); // fade-out duration
-
-        return () => clearTimeout(fadeTimer);
-    }, [currentScene]);
+    useEffect(() => {
+        // Only update transformOrigin when zoom changes
+        updateTransformOrigin();
+        
+    }, [cameraPos.zoom]);
 
     return (
         <div
-            className="w-full h-full transition-opacity duration-300 border-purple-300 border-4"
-            style={{ opacity }}
+            ref={sceneManagerRef}
+            className=" w-full h-full transition-opacity duration-300 border-4 border-purple-400"
+            style={{
+                transform: `scale(${cameraPos.zoom})`,
+                transformOrigin: transformOrigin,
+                transition: 'transform 0.1s ease-out',
+            }}
         >
-            {visibleScene === 'scene1' && <SceneOne />}
-            {visibleScene === 'scene2' && <SceneTwo />}
+            {currentScene === 'scene1' && <SceneOne />}
+            {currentScene === 'scene2' && <SceneTwo />}
         </div>
     );
 };

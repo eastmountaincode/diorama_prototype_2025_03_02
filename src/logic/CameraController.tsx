@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { cameraPositionAtom, zoomLevelAtom, mousePositionAtom } from '../atoms/gameState';
+import { cameraPositionAtom, mousePositionAtom } from '../atoms/gameState';
 
 const CameraController: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -8,8 +8,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
     const mousePositionRef = useRef({ x: 0, y: 0 });
     const moveInterval = useRef<number | null>(null);
 
-    const [, setCameraPos] = useAtom(cameraPositionAtom);
-    const [zoom] = useAtom(zoomLevelAtom);
+    const [cameraPos, setCameraPos] = useAtom(cameraPositionAtom);
     const [, setMousePos] = useAtom(mousePositionAtom);
 
     const updateMousePos = (e: MouseEvent | TouchEvent) => {
@@ -46,11 +45,12 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
             const normalizedX = x / distance;
             const normalizedY = y / distance;
 
-            const speed = 2 / zoom;
+            const speed = 2.5 * cameraPos.zoom;
 
             setCameraPos(prev => ({
                 x: prev.x - normalizedX * speed,
                 y: prev.y - normalizedY * speed,
+                zoom: prev.zoom
             }));
         }, 16); // ~60fps
     };
@@ -101,7 +101,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
 
             stopMoving();
         };
-    }, [zoom]);
+    }, [cameraPos.zoom]);
 
     return (
         <div ref={containerRef} className="w-full h-full relative overflow-hidden border-2 border-red-500">
