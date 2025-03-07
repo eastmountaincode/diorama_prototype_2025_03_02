@@ -22,7 +22,7 @@ const SceneManager: React.FC = () => {
 
     return (
         <div
-            className="w-full h-full transition-opacity duration-300 overflow-hidden"
+            className="w-full h-full transition-opacity duration-300 border-purple-300 border-4"
             style={{ opacity }}
         >
             {visibleScene === 'scene1' && <SceneOne />}

@@ -6,7 +6,8 @@ const SceneOne: React.FC = () => {
     const [zoom] = useAtom(zoomLevelAtom);
 
     return (
-        <div className="w-full h-full overflow-hidden flex items-center justify-center">
+        // using h-full keeps the image centered, that's good
+        <div className="h-full overflow-hidden flex items-center justify-center">
             <div
                 style={{
                     width: `${957 * zoom}px`,
@@ -19,7 +20,12 @@ const SceneOne: React.FC = () => {
                     alt="Scene One BG"
                     width={957}
                     height={951}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        userSelect: 'none',
+                        pointerEvents: 'none',
+                    }}
                 />
             </div>
         </div>

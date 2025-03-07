@@ -6,7 +6,7 @@ const SceneTwo: React.FC = () => {
     const [zoom] = useAtom(zoomLevelAtom);
 
     return (
-        <div className="w-full h-full overflow-hidden flex items-center justify-center border-2 border-amber-400">
+        <div className="h-full overflow-hidden flex items-center justify-center ">
             <div
                 style={{
                     width: `${1500 * zoom}px`,
@@ -19,7 +19,12 @@ const SceneTwo: React.FC = () => {
                     alt="Scene Two BG"
                     width={1500}
                     height={1283}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        userSelect: 'none',
+                        pointerEvents: 'none',
+                    }}
                 />
             </div>
         </div>
