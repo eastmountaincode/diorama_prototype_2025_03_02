@@ -20,7 +20,7 @@ export const sceneConfig: Record<string, SceneConfig> = {
     },
     scene3: {
         name: "Computer Diorama",
-        hasCharacter: false,
+        hasCharacter: true,
         width: 3778,
         height: 3930,
     },

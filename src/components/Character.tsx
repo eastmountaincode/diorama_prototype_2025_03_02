@@ -9,7 +9,6 @@ const SPRITE_OFFSET_X = 0;
 const SPRITE_OFFSET_Y = -32;
 const FRAME_SPACING = 4; // ✅ Adjust this to increase/decrease the spacing between frames
 
-
 // ✅ Maps direction to row index (Y position)
 const DIRECTION_ROWS: Record<string, number> = {
     idle: 3,
@@ -64,18 +63,18 @@ const Character: React.FC = () => {
             setFrameIndex(0); // ✅ Reset animation when changing direction
             setPrevDirection(characterMovingDirection);
         }
-    
+
         if (characterMovingDirection === 'idle') {
             setFrameIndex(0); // ✅ Reset animation when idle
             return;
         }
-    
+
         const maxFrames = FRAME_COUNTS[characterMovingDirection] || 8; // ✅ Get correct frame count
-    
+
         const interval = setInterval(() => {
             setFrameIndex(prev => (prev + 1) % maxFrames); // ✅ Loop within correct frame count
         }, ANIMATION_SPEED);
-    
+
         return () => clearInterval(interval);
     }, [characterMovingDirection, prevDirection]);
 
@@ -83,9 +82,11 @@ const Character: React.FC = () => {
     const rowIndex = DIRECTION_ROWS[characterMovingDirection] || 3;
     const isFlipped = ["left", "upLeft", "downLeft"].includes(characterMovingDirection);
 
+
     return (
+
         <div
-            className="absolute top-1/2 left-1/2 bg-no-repeat bg-cover transform -translate-x-1/2 -translate-y-1/2 select-none"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 select-none"
             style={{
                 backgroundImage: `url(${SPRITE_SHEET_URL})`,
                 backgroundPosition: `

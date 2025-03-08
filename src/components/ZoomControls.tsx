@@ -40,6 +40,10 @@ const ZoomControls: React.FC = () => {
             >
                 –
             </button>
+             {/** Zoom Level Display */}
+             <div className="text-white text-sm px-4 py-1 bg-gray-700 rounded shadow-md items-center flex justify-items-center">
+                {zoom.toFixed(2)}x
+            </div>
 
             {/** Zoom In Button */}
             <button

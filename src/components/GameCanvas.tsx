@@ -44,6 +44,7 @@ const GameCanvas: React.FC = () => {
             {/* Character Icon */}
             {sceneHasCharacter && <Character />}
 
+
             {/* Zoom Controls */}
             <ZoomControls />
         </div>
