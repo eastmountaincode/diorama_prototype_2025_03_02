@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { useAtom } from 'jotai';
-import { cameraPositionAtom, mousePositionAtom } from '../atoms/gameState';
+import { cameraPositionAtom, characterMovingDirectionAtom, mousePositionAtom } from '../atoms/gameState';
 
-const MOVE_SPEED = 3.5;
+const MOVE_SPEED = 3.0;
 const MOVE_INTERVAL = 16; // ~60fps
+//const DIAGONAL_THRESHOLD = 0.3; // ✅ Lower threshold to make diagonals easier to trigger
+
 
 const CameraController: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -13,6 +15,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
 
     const [, setCameraPos] = useAtom(cameraPositionAtom);
     const [, setMousePos] = useAtom(mousePositionAtom);
+    const [, setCharacterMovingDirection] = useAtom(characterMovingDirectionAtom);
 
     /** Updates mouse position relative to the GameCanvas center */
     const updateMousePos = useCallback((e: MouseEvent | TouchEvent) => {
@@ -49,6 +52,37 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
                 y: prev.y - normalizedY * MOVE_SPEED,
                 zoom: prev.zoom
             }));
+
+            // Set direction based on movement
+            const DIAGONAL_THRESHOLD = 0.55; // ✅ Makes diagonals easier to trigger
+
+            if (Math.abs(normalizedX) > Math.abs(normalizedY) * DIAGONAL_THRESHOLD) {
+                // Horizontal-dominant movement
+                if (normalizedY < -0.35) {
+                    setCharacterMovingDirection(normalizedX > 0 ? 'upRight' : 'upLeft');
+                } else if (normalizedY > 0.35) {
+                    setCharacterMovingDirection(normalizedX > 0 ? 'downRight' : 'downLeft');
+                } else {
+                    setCharacterMovingDirection(normalizedX > 0 ? 'right' : 'left');
+                }
+            } else if (Math.abs(normalizedY) > Math.abs(normalizedX) * DIAGONAL_THRESHOLD) {
+                // Vertical-dominant movement
+                if (normalizedX > 0.35) {
+                    setCharacterMovingDirection(normalizedY > 0 ? 'downRight' : 'upRight');
+                } else if (normalizedX < -0.35) {
+                    setCharacterMovingDirection(normalizedY > 0 ? 'downLeft' : 'upLeft');
+                } else {
+                    setCharacterMovingDirection(normalizedY > 0 ? 'down' : 'up');
+                }
+            } else {
+                // Default behavior if close to center
+                setCharacterMovingDirection(
+                    normalizedX > 0
+                        ? (normalizedY > 0 ? 'downRight' : 'upRight')
+                        : (normalizedY > 0 ? 'downLeft' : 'upLeft')
+                );
+            }
+
         }, MOVE_INTERVAL);
     };
 
@@ -58,6 +92,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
             clearInterval(moveInterval.current);
             moveInterval.current = null;
         }
+        //setCharacterMovingDirection('idle'); // Reset to idle when movement stops
     };
 
     /** Handles mouse/touch down events */
@@ -107,6 +142,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
         <div ref={containerRef} className="w-full h-full relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none" style={{ transform: `translate(var(--camera-x, 0px), var(--camera-y, 0px))` }}>
                 {children}
+
             </div>
         </div>
     );

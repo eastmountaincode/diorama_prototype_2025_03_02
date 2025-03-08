@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SceneManager from '../logic/SceneManager';
 import ZoomControls from './ZoomControls';
 import CameraController from '../logic/CameraController';
-import { useAtom } from 'jotai';
-import { cameraPositionAtom } from '../atoms/gameState';
+import { useAtomValue } from 'jotai';
+import { cameraPositionAtom, currentSceneAtom } from '../atoms/gameState';
+import { sceneConfig } from '../scenes/sceneConfig';
+import Character from './Character';
 
 const GameCanvas: React.FC = () => {
-    const [cameraPos] = useAtom(cameraPositionAtom);
+    const cameraPos = useAtomValue(cameraPositionAtom);
+    const currentScene = useAtomValue(currentSceneAtom);
+    const [sceneHasCharacter, setSceneHasCharacter] = useState(false);
+
+    useEffect(() => {
+        setSceneHasCharacter(sceneConfig[currentScene]?.hasCharacter || false);
+    }, [currentScene]);
 
     return (
         <div
@@ -16,7 +24,7 @@ const GameCanvas: React.FC = () => {
                 '--camera-y': `${cameraPos.y}px`,
             } as React.CSSProperties}
         >
-            {/* ✅ Scaling Container - Ensures SceneManager scales from the center */}
+            {/* Scaling Container - Ensures SceneManager scales from the center */}
             <div
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 style={{
@@ -33,12 +41,10 @@ const GameCanvas: React.FC = () => {
                 </CameraController>
             </div>
 
-            {/* ✅ Character Icon - Always centered on the screen */}
-            <div className="absolute top-1/2 left-1/2 w-10 h-10 bg-blue-500 border-2 border-white rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-lg select-none">
-                {/* Character Icon Placeholder */}
-            </div>
+            {/* Character Icon */}
+            {sceneHasCharacter && <Character />}
 
-            {/* ✅ Zoom Controls - Positioned in the top-right */}
+            {/* Zoom Controls */}
             <ZoomControls />
         </div>
     );
