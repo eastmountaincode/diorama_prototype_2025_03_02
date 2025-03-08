@@ -10,7 +10,7 @@ const GameCanvas: React.FC = () => {
 
     return (
         <div
-            className="w-full h-full relative border-red-500 border-4 game-canvas overflow-hidden"
+            className="w-full h-full relative game-canvas overflow-hidden"
             style={{
                 '--camera-x': `${cameraPos.x}px`,
                 '--camera-y': `${cameraPos.y}px`,

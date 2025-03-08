@@ -4,18 +4,19 @@ import DebugBar from './DebugBar';
 
 const GameSpace: React.FC = () => {
     return (
-        <div className="w-full h-full flex flex-col bg-gray-400 border-green-500 border-4">
+        <div className="w-full h-full flex flex-col bg-gray-400">
             
-            {/* Thin Header */}
-            <div className="w-full h-10 bg-gray-800 text-white flex items-center justify-center text-sm font-bold select-none">
+            {/* ✅ Header Section */}
+            <header className="w-full h-10 bg-gray-800 text-white flex items-center justify-center text-sm font-bold select-none">
                 HEADER
-            </div>
+            </header>
 
-            {/* Expanding Middle Section */}
-            <div className="flex-1 w-full bg-gray-500 relative overflow-hidden">
+            {/* ✅ Main Content Area */}
+            <main className="flex-1 w-full bg-gray-500 relative overflow-hidden">
                 <GameCanvas />
-            </div>
+            </main>
 
+            {/* ✅ Debug Bar (Bottom) */}
             <DebugBar />
         </div>
     );

@@ -10,7 +10,7 @@ function App() {
 
     return (
         <Provider store={store}>
-            <div className="w-full flex flex-col bg-gray-200 border-blue-400 border-4" style={{ height: '100dvh' }}>
+            <div className="w-full flex flex-col bg-gray-200" style={{ height: '100dvh' }}>
                 <div className="flex-1 overflow-hidden">
                     {gameStarted ? (
                         <GameSpace />

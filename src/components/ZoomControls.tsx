@@ -29,11 +29,12 @@ const ZoomControls: React.FC = () => {
         <div className="absolute top-3 right-3 z-50 flex flex-row gap-3 select-none">
             {/** Zoom Out Button */}
             <button
-                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all ${
-                    zoom <= ZOOM_LEVELS[0]
-                        ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50'
-                        : 'bg-gray-700 text-white hover:bg-gray-600 cursor-pointer'
-                }`}
+                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out 
+                    ${
+                        zoom <= ZOOM_LEVELS[0]
+                            ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50 transition-opacity duration-300'
+                            : 'bg-gray-700 text-white hover:bg-gray-600 active:scale-95 cursor-pointer'
+                    }`}
                 onClick={handleZoomOut}
                 disabled={zoom <= ZOOM_LEVELS[0]}
             >
@@ -42,11 +43,12 @@ const ZoomControls: React.FC = () => {
 
             {/** Zoom In Button */}
             <button
-                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all ${
-                    zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]
-                        ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50'
-                        : 'bg-gray-700 text-white hover:bg-gray-600 cursor-pointer'
-                }`}
+                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out 
+                    ${
+                        zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]
+                            ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50 transition-opacity duration-300'
+                            : 'bg-gray-700 text-white hover:bg-gray-600 active:scale-95 cursor-pointer'
+                    }`}
                 onClick={handleZoomIn}
                 disabled={zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]}
             >
