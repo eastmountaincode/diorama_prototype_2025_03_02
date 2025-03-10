@@ -9,4 +9,10 @@ export default defineConfig({
     tailwindcss()
   ],
   base: '/diorama_prototype_2025_03_02/',
+  build: {
+    outDir: "dist", // ✅ Ensures built files go to `dist/`
+    rollupOptions: {
+        input: "index.html", // ✅ Ensures Vite starts from `index.html`
+    },
+},
 })
