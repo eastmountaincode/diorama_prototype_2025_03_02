@@ -1,49 +1,58 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAtom } from 'jotai';
 import { joystickInputAtom } from '../atoms/gameState';
 
+/** 📌 Joystick Config */
 const MAX_JOYSTICK_DISTANCE = 35;
 const JOYSTICK_SIZE = 120;
 const NUB_SIZE = 50;
 const JOYSTICK_RIGHT_MARGIN = -40;
 const JOYSTICK_BOTTOM_MARGIN = -5;
-const UPDATE_INTERVAL = 16; // ~60 FPS
+const UPDATE_INTERVAL = 16; // ~60 FPS updates
 
 const Joystick: React.FC = () => {
+    /** 🔹 Joystick Position & Movement */
     const [, setJoystickInput] = useAtom(joystickInputAtom);
+    const [nubOffset, setNubOffset] = useState({ x: 0, y: 0 });
 
-    const [joystickBasePos, setJoystickBasePos] = useState({
+    /** 🔹 Track joystick base position */
+    const [joystickBasePos, setJoystickBasePos] = useState(() => ({
         x: window.innerWidth - JOYSTICK_SIZE - JOYSTICK_RIGHT_MARGIN,
         y: window.innerHeight - JOYSTICK_SIZE - JOYSTICK_BOTTOM_MARGIN,
-    });
+    }));
 
-    const [nubOffset, setNubOffset] = useState({ x: 0, y: 0 });
+    /** 🔹 State to manage active joystick movement */
     const isDragging = useRef(false);
     const moveInterval = useRef<number | null>(null);
     const lastInput = useRef({ x: 0, y: 0 });
-    const inputToggle = useRef(false); // Force state updates
+    const inputToggle = useRef(false); // Used to force state updates
 
+    /** 📌 Handle joystick repositioning on window resize */
     useEffect(() => {
         const updateJoystickPosition = () => {
             setJoystickBasePos({
                 x: window.innerWidth - JOYSTICK_SIZE - JOYSTICK_RIGHT_MARGIN,
                 y: window.innerHeight - JOYSTICK_SIZE - JOYSTICK_BOTTOM_MARGIN,
             });
-            setNubOffset({ x: 0, y: 0 });
-            setJoystickInput({ x: 0, y: 0 });
+            resetJoystick();
         };
 
         window.addEventListener('resize', updateJoystickPosition);
         return () => window.removeEventListener('resize', updateJoystickPosition);
+    }, []);
+
+    /** 🔄 Continuously updates movement while joystick is held */
+    const updateMovement = useCallback(() => {
+        if (lastInput.current.x !== 0 || lastInput.current.y !== 0) {
+            inputToggle.current = !inputToggle.current;
+            setJoystickInput({
+                x: lastInput.current.x + (inputToggle.current ? 0.001 : -0.001),
+                y: lastInput.current.y,
+            });
+        }
     }, [setJoystickInput]);
 
-    const updateMovement = () => {
-        if (lastInput.current.x !== 0 || lastInput.current.y !== 0) {
-            inputToggle.current = !inputToggle.current; // Force React to detect changes
-            setJoystickInput({ x: lastInput.current.x + (inputToggle.current ? 0.001 : -0.001), y: lastInput.current.y });
-        }
-    };
-
+    /** 🟢 Start tracking joystick movement */
     const startJoystick = (e: React.TouchEvent | React.MouseEvent) => {
         e.preventDefault();
         isDragging.current = true;
@@ -51,7 +60,8 @@ const Joystick: React.FC = () => {
         moveInterval.current = window.setInterval(updateMovement, UPDATE_INTERVAL);
     };
 
-    const moveJoystick = (e: TouchEvent | MouseEvent) => {
+    /** 🔄 Update joystick position based on user input */
+    const moveJoystick = useCallback((e: TouchEvent | MouseEvent) => {
         if (!isDragging.current) return;
 
         const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
@@ -69,19 +79,26 @@ const Joystick: React.FC = () => {
 
         setNubOffset({ x: dx, y: dy });
         lastInput.current = { x: dx, y: dy };
-    };
+    }, [joystickBasePos]);
 
-    const stopJoystick = () => {
+    /** 🛑 Stop joystick movement */
+    const stopJoystick = useCallback(() => {
         isDragging.current = false;
         if (moveInterval.current) {
             clearInterval(moveInterval.current);
             moveInterval.current = null;
         }
+        resetJoystick();
+    }, []);
+
+    /** 🔄 Reset joystick to neutral position */
+    const resetJoystick = () => {
         setNubOffset({ x: 0, y: 0 });
         setJoystickInput({ x: 0, y: 0 });
         lastInput.current = { x: 0, y: 0 };
     };
 
+    /** 📌 Register global event listeners */
     useEffect(() => {
         window.addEventListener('mousemove', moveJoystick);
         window.addEventListener('mouseup', stopJoystick);
@@ -94,10 +111,11 @@ const Joystick: React.FC = () => {
             window.removeEventListener('touchmove', moveJoystick);
             window.removeEventListener('touchend', stopJoystick);
         };
-    }, []);
+    }, [moveJoystick, stopJoystick]);
 
     return (
-        <div className='select-none'>
+        <div className="select-none">
+            {/* 🟢 Joystick Base (Fixed) */}
             <div
                 className="absolute bg-gray-700 opacity-50 rounded-full z-50"
                 style={{
@@ -110,6 +128,7 @@ const Joystick: React.FC = () => {
                 }}
             />
 
+            {/* 🔵 Joystick Nub (Moves) */}
             <div
                 className="absolute bg-gray-900 rounded-full shadow-lg transition-transform duration-75 ease-out select-none"
                 style={{
@@ -122,11 +141,12 @@ const Joystick: React.FC = () => {
                 }}
             />
 
+            {/* 🛑 Joystick Touch Area */}
             <div
                 className="absolute bottom-2 right-2 w-40 h-40 bg-transparent z-50"
                 onMouseDown={startJoystick}
                 onTouchStart={startJoystick}
-                style={{ pointerEvents: "all" }}
+                style={{ pointerEvents: 'all' }}
             />
         </div>
     );

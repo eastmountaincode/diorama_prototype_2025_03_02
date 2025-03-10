@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { cameraPositionAtom, characterMovingDirectionAtom, joystickInputAtom } from '../atoms/gameState';
-import MouseInputHandler from './MouseInputHandler';
+import KeyboardInputHandler from './KeyboardInputHandler';
 
 const MOVE_SPEED = 3.0;
 
@@ -61,7 +61,7 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
 
     return (
         <div className="w-full h-full relative overflow-hidden">
-            <MouseInputHandler onMove={moveCamera} onStop={stopMoving} />
+            <KeyboardInputHandler onMove={moveCamera} onStop={stopMoving} />
 
             <div className="absolute inset-0 pointer-events-none" style={{ transform: `translate(var(--camera-x, 0px), var(--camera-y, 0px))` }}>
                 {children}
