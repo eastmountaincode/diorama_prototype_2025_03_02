@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './App.css';
 import GameSpace from './components/GameSpace';
-import StartGameModal_01 from './components/modals/StartGameModal_01';
+import StartGameModal_02 from './components/modals/StartGameModal_02';
 
 function App() {
-    const [gameStarted, setGameStarted] = useState(true);
+    const [gameStarted, setGameStarted] = useState(false);
 
     return (
 
@@ -13,7 +13,7 @@ function App() {
                 {gameStarted ? (
                     <GameSpace />
                 ) : (
-                    <StartGameModal_01 onStartGame={() => setGameStarted(true)} />
+                    <StartGameModal_02 onStartGame={() => setGameStarted(true)} />
                 )}
             </div>
         </div>

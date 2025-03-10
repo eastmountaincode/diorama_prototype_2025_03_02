@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAtom } from 'jotai';
-import { currentSceneAtom, cameraPositionAtom } from '../atoms/gameState';
+import { currentSceneAtom } from '../atoms/gameState';
 
 const DebugBar: React.FC = () => {
     const [currentScene, setCurrentScene] = useAtom(currentSceneAtom);
-    const [cameraPos] = useAtom(cameraPositionAtom); // ✅ Get camera position
+    //const [cameraPos] = useAtom(cameraPositionAtom); // ✅ Get camera position
 
     return (
         <div className="h-10 bg-gray-700 text-white flex items-center text-xs px-4 gap-6 select-none">
@@ -25,7 +25,7 @@ const DebugBar: React.FC = () => {
             </div>
 
             {/* ✅ Display Camera Position */}
-            <span>Camera: X={cameraPos.x.toFixed(2)}, Y={cameraPos.y.toFixed(2)}, Zoom={cameraPos.zoom.toFixed(2)}x</span>
+            {/* <span>Camera: X={cameraPos.x.toFixed(2)}, Y={cameraPos.y.toFixed(2)}, Zoom={cameraPos.zoom.toFixed(2)}x</span> */}
         </div>
     );
 };

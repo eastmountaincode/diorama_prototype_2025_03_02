@@ -117,7 +117,7 @@ const Joystick: React.FC = () => {
         <div className="select-none">
             {/* 🟢 Joystick Base (Fixed) */}
             <div
-                className="absolute bg-gray-700 opacity-50 rounded-full z-50"
+                className="absolute bg-gray-700 opacity-50 rounded-full z-70"
                 style={{
                     width: `${JOYSTICK_SIZE}px`,
                     height: `${JOYSTICK_SIZE}px`,
@@ -130,7 +130,7 @@ const Joystick: React.FC = () => {
 
             {/* 🔵 Joystick Nub (Moves) */}
             <div
-                className="absolute bg-gray-900 rounded-full shadow-lg transition-transform duration-75 ease-out select-none"
+                className="absolute bg-gray-900 rounded-full shadow-lg transition-transform duration-75 ease-out select-none z-70"
                 style={{
                     width: `${NUB_SIZE}px`,
                     height: `${NUB_SIZE}px`,
@@ -143,7 +143,7 @@ const Joystick: React.FC = () => {
 
             {/* 🛑 Joystick Touch Area */}
             <div
-                className="absolute bottom-2 right-2 w-40 h-40 bg-transparent z-50"
+                className="absolute bottom-2 right-2 w-40 h-40 bg-transparent z-70"
                 onMouseDown={startJoystick}
                 onTouchStart={startJoystick}
                 style={{ pointerEvents: 'all' }}

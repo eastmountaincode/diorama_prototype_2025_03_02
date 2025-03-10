@@ -1,0 +1,11 @@
+.ticker-text {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    /* Use a digital-style font. You can import one from Google Fonts (e.g., VT323) */
+    font-family: 'VT323', monospace;
+    color: #0ff;         /* Neon cyan */
+    text-shadow: 0 0 2px #0ff, 0 0 4px #0ff;
+    margin-right: 0rem;
+  }
+  

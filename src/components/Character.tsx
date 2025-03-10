@@ -84,20 +84,18 @@ const Character: React.FC = () => {
 
 
     return (
-
         <div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 select-none"
+            className="select-none"
             style={{
                 backgroundImage: `url(${SPRITE_SHEET_URL})`,
                 backgroundPosition: `
-                    -${frameIndex * (SPRITE_SIZE + FRAME_SPACING) + SPRITE_OFFSET_X + offsetX}px 
-                    -${rowIndex * SPRITE_SIZE + SPRITE_OFFSET_Y + offsetY}px
-                `,
+                -${frameIndex * (SPRITE_SIZE + FRAME_SPACING) + SPRITE_OFFSET_X + offsetX}px 
+                -${rowIndex * SPRITE_SIZE + SPRITE_OFFSET_Y + offsetY}px
+            `,
                 width: `${SPRITE_SIZE}px`,
                 height: `${SPRITE_SIZE}px`,
-                transform: `scale(${zoom}) ${isFlipped ? 'scaleX(-1)' : ''}`, // ✅ Flip if moving left
+                transform: `scale(${zoom}) ${isFlipped ? 'scaleX(-1)' : ''}`,
                 transformOrigin: 'center',
-                // transition: 'transform 0.1s ease-out',
             }}
         />
     );
