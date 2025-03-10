@@ -6,6 +6,7 @@ import { useAtomValue } from 'jotai';
 import { cameraPositionAtom, currentSceneAtom } from '../atoms/gameState';
 import { sceneConfig } from '../scenes/sceneConfig';
 import Character from './Character';
+import Joystick from './Joystick';
 
 const GameCanvas: React.FC = () => {
     const cameraPos = useAtomValue(cameraPositionAtom);
@@ -18,7 +19,7 @@ const GameCanvas: React.FC = () => {
 
     return (
         <div
-            className="w-full h-full relative game-canvas overflow-hidden"
+            className="w-full h-full relative game-canvas overflow-hidden select-none"
             style={{
                 '--camera-x': `${cameraPos.x}px`,
                 '--camera-y': `${cameraPos.y}px`,
@@ -44,9 +45,10 @@ const GameCanvas: React.FC = () => {
             {/* Character Icon */}
             {sceneHasCharacter && <Character />}
 
-
             {/* Zoom Controls */}
             <ZoomControls />
+
+            <Joystick />
         </div>
     );
 };

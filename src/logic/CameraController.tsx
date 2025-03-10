@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { cameraPositionAtom, characterMovingDirectionAtom } from '../atoms/gameState';
+import { cameraPositionAtom, characterMovingDirectionAtom, joystickInputAtom } from '../atoms/gameState';
 import MouseInputHandler from './MouseInputHandler';
 
 const MOVE_SPEED = 3.0;
@@ -8,8 +8,9 @@ const MOVE_SPEED = 3.0;
 const CameraController: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [, setCameraPos] = useAtom(cameraPositionAtom);
     const [, setCharacterMovingDirection] = useAtom(characterMovingDirectionAtom);
+    const [joystickInput] = useAtom(joystickInputAtom);
 
-    /** Moves the camera in a given direction */
+    /** Moves the camera based on input */
     const moveCamera = useCallback((x: number, y: number) => {
         const distance = Math.sqrt(x ** 2 + y ** 2);
         if (distance < 5) return;
@@ -46,7 +47,17 @@ const CameraController: React.FC<{ children: React.ReactNode }> = ({ children })
 
     /** Stops camera movement */
     const stopMoving = useCallback(() => {
+        // setCharacterMovingDirection('idle');
     }, [setCharacterMovingDirection]);
+
+    // React to joystick movement
+    useEffect(() => {
+        if (joystickInput.x !== 0 || joystickInput.y !== 0) {
+            moveCamera(joystickInput.x, joystickInput.y);
+        } else {
+            stopMoving();
+        }
+    }, [joystickInput, moveCamera, stopMoving]);
 
     return (
         <div className="w-full h-full relative overflow-hidden">
