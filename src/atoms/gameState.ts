@@ -1,5 +1,7 @@
 import { atom } from "jotai";
 
+export const PROGRESS_BAR_MAX_TIME = 10;
+
 export const currentSceneAtom = atom('sceneBlank')
 export const cameraPositionAtom = atom({ x: 0, y: 0, zoom: 1 });
 export const mousePositionAtom = atom<{ x: number; y: number }>({ x: 0, y: 0})
@@ -17,9 +19,12 @@ export const campfireDistanceAtom = atom<number>(0);
 export const coolThingDistanceAtom = atom<number>(0);
 export const coolThingProximityAtom = atom<boolean>(false);
 
+// Cool thing progress state
+export const coolThingProgressAtom = atom(0);
+
 // Timer state atom
 export const timerStateAtom = atom({
-    timeRemaining: 12, // Default max time in seconds
+    timeRemaining: PROGRESS_BAR_MAX_TIME,
     isTimerExpired: false,
 });
 

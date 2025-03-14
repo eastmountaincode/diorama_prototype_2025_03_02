@@ -120,7 +120,7 @@ const GameCanvas: React.FC = () => {
                 <div className="absolute inset-0 flex items-center justify-center z-100 bg-black/70">
                     <div style={{ animation: 'announcement-bounce 1.5s infinite' }}>
                         <img 
-                            src={`assets/announcements/${announcement.type === 'timeUp' ? 'bad.png' : 'info.png'}`}
+                            src={`assets/announcements/${announcement.type === 'timeUp' ? 'bad.png' : announcement.type === 'achievement' ? 'good.png' : ''}`}
                             alt={announcement.message || "Announcement"} 
                             className="max-w-full max-h-full object-contain"
                             style={{ maxHeight: '80vh' }}

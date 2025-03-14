@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { 
     cameraPositionAtom, 
     currentSceneAtom, 
     timerStateAtom,
-    announcementAtom
+    announcementAtom,
+    coolThingProgressAtom
 } from '../atoms/gameState';
 import { sceneConfig } from '../scenes/sceneConfig';
 
@@ -20,6 +21,7 @@ const Consequences: React.FC = () => {
     const [currentScene] = useAtom(currentSceneAtom);
     const [timerState, setTimerState] = useAtom(timerStateAtom);
     const [, setAnnouncement] = useAtom(announcementAtom);
+    const [, setCoolThingProgress] = useAtom(coolThingProgressAtom);
     
     // Handle timer expiration
     useEffect(() => {
@@ -63,8 +65,11 @@ const Consequences: React.FC = () => {
                     isTimerExpired: false,
                 }));
             }, 0);
+
+            // Reset cool thing progress
+            setCoolThingProgress(0);
         }
-    }, [timerState.isTimerExpired, currentScene, setCameraPos, setTimerState, setAnnouncement]);
+    }, [timerState.isTimerExpired, currentScene, setCameraPos, setTimerState, setAnnouncement, setCoolThingProgress]);
     
     // This component doesn't render anything visible
     return null;

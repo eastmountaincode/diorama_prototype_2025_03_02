@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { campfireProximityAtom, timerStateAtom } from '../atoms/gameState';
+import { PROGRESS_BAR_MAX_TIME } from '../atoms/gameState';
 
 // Constants for the circular progress bar
-const PROGRESS_BAR_MAX_TIME = 12; // 12 seconds
 const CIRCLE_SIZE = 60; // Size of the circle in pixels
 const CIRCLE_STROKE_WIDTH = 6; // Width of the progress stroke
 const CIRCLE_RADIUS = (CIRCLE_SIZE - CIRCLE_STROKE_WIDTH) / 2; // Radius of the circle
@@ -88,10 +88,10 @@ const LifeProgressBar: React.FC<LifeProgressBarProps> = ({ onTimeUp }) => {
             
             // Reset the timer after a delay
             setTimeout(() => {
-                setTimerState(prev => ({
+                setTimerState({
                     timeRemaining: PROGRESS_BAR_MAX_TIME,
                     isTimerExpired: false
-                }));
+                });
             }, 1000); // 1 second delay before restarting
         }
     }, [timerState.isTimerExpired, onTimeUp, setTimerState]);
