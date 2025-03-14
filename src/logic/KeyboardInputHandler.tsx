@@ -1,4 +1,6 @@
 import React, { useEffect, useCallback, useRef } from 'react';
+import { useAtomValue } from 'jotai';
+import { movementEnabledAtom } from '../atoms/gameState';
 
 interface KeyboardInputHandlerProps {
     onMove: (x: number, y: number) => void;
@@ -19,6 +21,7 @@ const KEY_BINDINGS: Record<string, { x: number; y: number }> = {
 const KeyboardInputHandler: React.FC<KeyboardInputHandlerProps> = ({ onMove, onStop }) => {
     const activeKeys = useRef(new Set<string>()); // Tracks pressed keys
     const moveInterval = useRef<number | null>(null); // Handles movement updates
+    const movementEnabled = useAtomValue(movementEnabledAtom);
 
     /** 🔄 Updates movement based on active keys */
     const updateMovement = useCallback(() => {
@@ -57,12 +60,12 @@ const KeyboardInputHandler: React.FC<KeyboardInputHandlerProps> = ({ onMove, onS
     /** 🎮 Handles key press */
     const handleKeyDown = useCallback(
         (e: KeyboardEvent) => {
-            if (KEY_BINDINGS[e.key] && !activeKeys.current.has(e.key)) {
+            if (movementEnabled && KEY_BINDINGS[e.key] && !activeKeys.current.has(e.key)) {
                 activeKeys.current.add(e.key);
                 startMoving();
             }
         },
-        [startMoving]
+        [startMoving, movementEnabled]
     );
 
     /** 🎮 Handles key release */

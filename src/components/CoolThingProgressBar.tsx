@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { coolThingProximityAtom, announcementAtom, campfireProximityAtom, coolThingProgressAtom } from '../atoms/gameState';
+import { coolThingProximityAtom, announcementAtom, campfireProximityAtom, coolThingProgressAtom, movementEnabledAtom } from '../atoms/gameState';
 
 const CoolThingProgressBar: React.FC = () => {
     const isNearby = useAtomValue(coolThingProximityAtom);
@@ -9,7 +9,8 @@ const CoolThingProgressBar: React.FC = () => {
     const DECREASE_RATE = 0.5; // Rate at which progress decreases
     const setAnnouncement = useSetAtom(announcementAtom);
     const [announcementShown, setAnnouncementShown] = useState(false);
-    const [_, setCampfireProximity] = useAtom(campfireProximityAtom);
+    const setCampfireProximity = useSetAtom(campfireProximityAtom);
+    const setMovementEnabled = useSetAtom(movementEnabledAtom);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,6 +35,7 @@ const CoolThingProgressBar: React.FC = () => {
             });
             setAnnouncementShown(true);
             setCampfireProximity(true);
+            setMovementEnabled(false);
             
         }
     }, [progress, announcementShown, setAnnouncement]);
@@ -49,8 +51,8 @@ const CoolThingProgressBar: React.FC = () => {
             overflow: 'hidden',
             marginBottom: '10px', // Space between the progress bar and the CoolThingVisual
             position: 'absolute', // Allow manual positioning
-            top: '455px', // Example position, adjust as needed
-            left: '1010px' // Example position, adjust as needed
+            top: '455px', 
+            left: '1010px' 
         }}>
             <div style={{
                 width: '100%',
