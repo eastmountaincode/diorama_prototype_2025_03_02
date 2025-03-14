@@ -5,8 +5,8 @@ import { coolThingProximityAtom, announcementAtom, campfireProximityAtom, coolTh
 const CoolThingProgressBar: React.FC = () => {
     const isNearby = useAtomValue(coolThingProximityAtom);
     const [progress, setProgress] = useAtom(coolThingProgressAtom);
-    const INCREASE_RATE = 1.0; // Rate at which progress increases
-    const DECREASE_RATE = 0.5; // Rate at which progress decreases
+    const INCREASE_RATE = 0.9; // Rate at which progress increases
+    const DECREASE_RATE = 0.4; // Rate at which progress decreases
     const setAnnouncement = useSetAtom(announcementAtom);
     const [announcementShown, setAnnouncementShown] = useState(false);
     const setCampfireProximity = useSetAtom(campfireProximityAtom);
