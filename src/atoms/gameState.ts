@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const PROGRESS_BAR_MAX_TIME = 12;
+export const PROGRESS_BAR_MAX_TIME = 11;
 
 export const currentSceneAtom = atom('sceneBlank')
 export const cameraPositionAtom = atom({ x: 0, y: 0, zoom: 1 });
