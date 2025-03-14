@@ -50,7 +50,8 @@ const CoolThing: React.FC = () => {
                 audioContextRef.current = context;
                 
                 // Create audio element
-                const audioElement = new Audio('assets/sounds/xtal.mp3');
+                const audioElement = new Audio();
+                audioElement.src = 'assets/sounds/xtal.mp3';
                 audioElement.loop = true;
                 audioElement.crossOrigin = 'anonymous';
                 // Preload the audio
@@ -87,15 +88,22 @@ const CoolThing: React.FC = () => {
             // Remove event listeners after first interaction
             document.removeEventListener('click', handleUserInteraction);
             document.removeEventListener('touchstart', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            // Also try to resume the AudioContext if it exists but is suspended
+            if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+                audioContextRef.current.resume().catch(console.error);
+            }
         };
         
         document.addEventListener('click', handleUserInteraction);
         document.addEventListener('touchstart', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
         
         // Cleanup on unmount
         return () => {
             document.removeEventListener('click', handleUserInteraction);
             document.removeEventListener('touchstart', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
             
             // Clear any pending timeouts
             if (pauseTimeoutRef.current) {

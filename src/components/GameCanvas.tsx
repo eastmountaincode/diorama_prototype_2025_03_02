@@ -3,11 +3,12 @@ import SceneManager from '../logic/SceneManager';
 import ZoomControls from './ZoomControls';
 import CameraController from '../logic/CameraController';
 import { useAtom, useAtomValue } from 'jotai';
-import { cameraPositionAtom, currentSceneAtom } from '../atoms/gameState';
+import { announcementAtom, cameraPositionAtom, currentSceneAtom } from '../atoms/gameState';
 import { sceneConfig } from '../scenes/sceneConfig';
 import Character from './Character';
 import Joystick from './Joystick';
 import LifeProgressBar from './LifeProgressBar';
+import Consequences from '../logic/Consequences';
 
 // UI Background wrapper component
 const UIBackground: React.FC<{
@@ -41,7 +42,7 @@ const GameCanvas: React.FC = () => {
     const cameraPos = useAtomValue(cameraPositionAtom);
     const [currentScene, _] = useAtom(currentSceneAtom);
     const [sceneHasCharacter, setSceneHasCharacter] = useState(false);
-    const [showAnnouncement, setShowAnnouncement] = useState(false);
+    const [announcement] = useAtom(announcementAtom);
 
     useEffect(() => {
         setSceneHasCharacter(sceneConfig[currentScene]?.hasCharacter || false);
@@ -49,15 +50,8 @@ const GameCanvas: React.FC = () => {
 
     // Handle game restart or other actions when time runs out
     const handleTimeUp = () => {
-        // Show the announcement
-        setShowAnnouncement(true);
-        
-        // Hide the announcement after a delay
-        setTimeout(() => {
-            setShowAnnouncement(false);
-        }, 3000); // Hide after 3 seconds
-        
-        console.log('Time is up! Game restarted.');
+        // The actual consequences are now handled by the Consequences component
+        console.log('Time is up! Consequences component will handle it.');
     };
 
     return (
@@ -70,6 +64,9 @@ const GameCanvas: React.FC = () => {
         >
             {/* Inject CSS for animations */}
             <style>{announcementStyles}</style>
+            
+            {/* Include Consequences component */}
+            <Consequences />
             
             {/* Life Progress Bar with background */}
             <div className="absolute top-5 left-5 z-50">
@@ -119,12 +116,12 @@ const GameCanvas: React.FC = () => {
             </div>
 
             {/* Full-screen Announcement */}
-            {showAnnouncement && (
+            {announcement.show && (
                 <div className="absolute inset-0 flex items-center justify-center z-100 bg-black/70">
                     <div style={{ animation: 'announcement-bounce 1.5s infinite' }}>
                         <img 
-                            src="assets/announcements/bad.png" 
-                            alt="Game Over" 
+                            src={`assets/announcements/${announcement.type === 'timeUp' ? 'bad.png' : 'info.png'}`}
+                            alt={announcement.message || "Announcement"} 
                             className="max-w-full max-h-full object-contain"
                             style={{ maxHeight: '80vh' }}
                         />

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { cameraPositionAtom, currentSceneAtom, campfireProximityAtom } from '../atoms/gameState';
-import { sceneConfig } from '../scenes/sceneConfig';
+import { campfireProximityAtom, timerStateAtom } from '../atoms/gameState';
 
 // Constants for the circular progress bar
-const PROGRESS_BAR_MAX_TIME = 12; // 10 seconds
+const PROGRESS_BAR_MAX_TIME = 12; // 12 seconds
 const CIRCLE_SIZE = 60; // Size of the circle in pixels
 const CIRCLE_STROKE_WIDTH = 6; // Width of the progress stroke
 const CIRCLE_RADIUS = (CIRCLE_SIZE - CIRCLE_STROKE_WIDTH) / 2; // Radius of the circle
@@ -18,14 +17,9 @@ interface LifeProgressBarProps {
 }
 
 const LifeProgressBar: React.FC<LifeProgressBarProps> = ({ onTimeUp }) => {
-    // Progress bar state - start at exactly the max time
-    const [timeRemaining, setTimeRemaining] = useState(PROGRESS_BAR_MAX_TIME);
+    // Use the shared timer state atom
+    const [timerState, setTimerState] = useAtom(timerStateAtom);
     const timerRef = useRef<number | null>(null);
-    const [shouldResetPosition, setShouldResetPosition] = useState(false);
-    
-    // Get atoms for resetting position
-    const [, setCameraPos] = useAtom(cameraPositionAtom);
-    const [currentScene] = useAtom(currentSceneAtom);
     
     // Get campfire proximity atom
     const isNearCampfire = useAtomValue(campfireProximityAtom);
@@ -47,24 +41,26 @@ const LifeProgressBar: React.FC<LifeProgressBarProps> = ({ onTimeUp }) => {
         
         // Start a new timer
         timerRef.current = window.setInterval(() => {
-            setTimeRemaining(prev => {
+            setTimerState(prev => {
+                // Calculate new time remaining
+                let newTimeRemaining;
+                
                 // If near campfire, refill the timer instead of decreasing it
                 if (isNearCampfireRef.current) {
                     // Increase time but cap at max
-                    const newTime = Math.min(prev + (REFILL_RATE * 0.1), PROGRESS_BAR_MAX_TIME);
-                    return newTime;
+                    newTimeRemaining = Math.min(prev.timeRemaining + (REFILL_RATE * 0.1), PROGRESS_BAR_MAX_TIME);
                 } else {
                     // Normal decrease when not near campfire
-                    const newTime = prev - 0.1; // Decrease by 0.1 seconds
-                    
-                    // If time is up, handle restart
-                    if (newTime <= 0) {
-                        handleTimeUp();
-                        return 0;
-                    }
-                    
-                    return newTime;
+                    newTimeRemaining = Math.max(prev.timeRemaining - 0.1, 0); // Decrease by 0.1 seconds but don't go below 0
                 }
+                
+                // Check if timer just expired
+                const isNewlyExpired = prev.timeRemaining > 0 && newTimeRemaining <= 0;
+                
+                return {
+                    timeRemaining: newTimeRemaining,
+                    isTimerExpired: isNewlyExpired || (prev.isTimerExpired && newTimeRemaining <= 0)
+                };
             });
         }, 100); // Update every 100ms for smoother animation
     };
@@ -82,51 +78,26 @@ const LifeProgressBar: React.FC<LifeProgressBarProps> = ({ onTimeUp }) => {
         };
     }, []); // Only run once on mount
 
-    // Effect to handle camera position reset
+    // Handle timer expiration callback
     useEffect(() => {
-        if (shouldResetPosition) {
-            // Reset to starting position in current scene
-            const currentSceneConfig = sceneConfig[currentScene];
-            if (currentSceneConfig && 'startPosition' in currentSceneConfig) {
-                const startPos = currentSceneConfig.startPosition as { x: number; y: number };
-                // Reset camera to the scene's starting position
-                setCameraPos(prevPos => ({
-                    x: startPos.x,
-                    y: startPos.y,
-                    zoom: prevPos.zoom // Keep the current zoom level
-                }));
+        if (timerState.isTimerExpired) {
+            // Call the optional callback if provided
+            if (onTimeUp) {
+                onTimeUp();
             }
             
-            // Reset the flag
-            setShouldResetPosition(false);
+            // Reset the timer after a delay
+            setTimeout(() => {
+                setTimerState(prev => ({
+                    timeRemaining: PROGRESS_BAR_MAX_TIME,
+                    isTimerExpired: false
+                }));
+            }, 1000); // 1 second delay before restarting
         }
-    }, [shouldResetPosition, currentScene, setCameraPos]);
-
-    // Handle what happens when time runs out
-    const handleTimeUp = () => {
-        // Clear the interval
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-        
-        // Set flag to reset position in the effect
-        setShouldResetPosition(true);
-        
-        // Call the optional callback if provided
-        if (onTimeUp) {
-            onTimeUp();
-        }
-        
-        // Reset the timer and restart after a short delay
-        setTimeout(() => {
-            setTimeRemaining(PROGRESS_BAR_MAX_TIME);
-            startTimer();
-        }, 1000); // 1 second delay before restarting
-    };
+    }, [timerState.isTimerExpired, onTimeUp, setTimerState]);
 
     // Calculate progress for the circular progress bar
-    const progressPercentage = timeRemaining / PROGRESS_BAR_MAX_TIME;
+    const progressPercentage = timerState.timeRemaining / PROGRESS_BAR_MAX_TIME;
     const strokeDashoffset = CIRCLE_CIRCUMFERENCE * (1 - progressPercentage);
     
     // Determine the color based on the percentage and campfire proximity
@@ -170,7 +141,6 @@ const LifeProgressBar: React.FC<LifeProgressBarProps> = ({ onTimeUp }) => {
                     className="transition-all duration-100 ease-linear"
                 />
             </svg>
-            
         </div>
     );
 };

@@ -138,9 +138,9 @@ const StartGameModal_02: React.FC<{ onStartGame: () => void }> = ({ onStartGame 
                             const button = e.currentTarget as HTMLButtonElement;
                             button.disabled = true;
                             
-                            // Keep the button visually pressed
-                            button.style.transform = 'translateY(3px)';
-                            button.style.boxShadow = '0 1px 0 #2D3748, 0 2px 3px rgba(0, 0, 0, 0.3)';
+                            // Make sure the button comes back up after being pressed
+                            button.style.transform = '';
+                            button.style.boxShadow = '0 4px 0 #2D3748, 0 5px 5px rgba(0, 0, 0, 0.3)';
                             
                             // Wait half a second before proceeding
                             setTimeout(() => {

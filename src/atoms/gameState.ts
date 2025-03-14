@@ -17,3 +17,16 @@ export const campfireDistanceAtom = atom<number>(0);
 export const coolThingDistanceAtom = atom<number>(0);
 export const coolThingProximityAtom = atom<boolean>(false);
 
+// Timer state atom
+export const timerStateAtom = atom({
+    timeRemaining: 12, // Default max time in seconds
+    isTimerExpired: false,
+});
+
+// Announcement state atom
+export const announcementAtom = atom({
+    show: false,
+    type: 'none', // 'none', 'timeUp', 'achievement', etc.
+    message: '',
+});
+
