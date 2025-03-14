@@ -6,8 +6,6 @@ import { joystickInputAtom } from '../atoms/gameState';
 const MAX_JOYSTICK_DISTANCE = 35;
 const JOYSTICK_SIZE = 120;
 const NUB_SIZE = 50;
-const JOYSTICK_RIGHT_MARGIN = -40;
-const JOYSTICK_BOTTOM_MARGIN = -5;
 const UPDATE_INTERVAL = 16; // ~60 FPS updates
 
 const Joystick: React.FC = () => {
@@ -16,10 +14,8 @@ const Joystick: React.FC = () => {
     const [nubOffset, setNubOffset] = useState({ x: 0, y: 0 });
 
     /** 🔹 Track joystick base position */
-    const [joystickBasePos, setJoystickBasePos] = useState(() => ({
-        x: window.innerWidth - JOYSTICK_SIZE - JOYSTICK_RIGHT_MARGIN,
-        y: window.innerHeight - JOYSTICK_SIZE - JOYSTICK_BOTTOM_MARGIN,
-    }));
+    const joystickRef = useRef<HTMLDivElement>(null);
+    const [joystickBasePos, setJoystickBasePos] = useState({ x: 0, y: 0 });
 
     /** 🔹 State to manage active joystick movement */
     const isDragging = useRef(false);
@@ -27,16 +23,23 @@ const Joystick: React.FC = () => {
     const lastInput = useRef({ x: 0, y: 0 });
     const inputToggle = useRef(false); // Used to force state updates
 
-    /** 📌 Handle joystick repositioning on window resize */
+    /** 📌 Calculate joystick position on mount and resize */
     useEffect(() => {
         const updateJoystickPosition = () => {
-            setJoystickBasePos({
-                x: window.innerWidth - JOYSTICK_SIZE - JOYSTICK_RIGHT_MARGIN,
-                y: window.innerHeight - JOYSTICK_SIZE - JOYSTICK_BOTTOM_MARGIN,
-            });
+            if (joystickRef.current) {
+                const rect = joystickRef.current.getBoundingClientRect();
+                setJoystickBasePos({
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                });
+            }
             resetJoystick();
         };
 
+        // Initial position
+        updateJoystickPosition();
+        
+        // Update on resize
         window.addEventListener('resize', updateJoystickPosition);
         return () => window.removeEventListener('resize', updateJoystickPosition);
     }, []);
@@ -114,36 +117,34 @@ const Joystick: React.FC = () => {
     }, [moveJoystick, stopJoystick]);
 
     return (
-        <div className="select-none">
-            {/* 🟢 Joystick Base (Fixed) */}
+        <div className="select-none relative" style={{ width: `${JOYSTICK_SIZE}px`, height: `${JOYSTICK_SIZE}px` }} ref={joystickRef}>
+            {/* 🟢 Joystick Base */}
             <div
-                className="absolute bg-gray-700 opacity-50 rounded-full z-70"
+                className="absolute bg-gray-700 opacity-50 rounded-full"
                 style={{
                     width: `${JOYSTICK_SIZE}px`,
                     height: `${JOYSTICK_SIZE}px`,
-                    left: `${joystickBasePos.x}px`,
-                    top: `${joystickBasePos.y}px`,
+                    left: '50%',
+                    top: '50%',
                     transform: 'translate(-50%, -50%)',
-                    position: 'fixed',
                 }}
             />
 
-            {/* 🔵 Joystick Nub (Moves) */}
+            {/* 🔵 Joystick Nub */}
             <div
-                className="absolute bg-gray-900 rounded-full shadow-lg transition-transform duration-75 ease-out select-none z-70"
+                className="absolute bg-gray-900 rounded-full shadow-lg transition-transform duration-75 ease-out"
                 style={{
                     width: `${NUB_SIZE}px`,
                     height: `${NUB_SIZE}px`,
-                    left: `${joystickBasePos.x + nubOffset.x}px`,
-                    top: `${joystickBasePos.y + nubOffset.y}px`,
-                    transform: 'translate(-50%, -50%)',
-                    position: 'fixed',
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(calc(-50% + ${nubOffset.x}px), calc(-50% + ${nubOffset.y}px))`,
                 }}
             />
 
             {/* 🛑 Joystick Touch Area */}
             <div
-                className="absolute bottom-2 right-2 w-40 h-40 bg-transparent z-70"
+                className="absolute inset-0 bg-transparent"
                 onMouseDown={startJoystick}
                 onTouchStart={startJoystick}
                 style={{ pointerEvents: 'all' }}

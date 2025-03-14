@@ -26,10 +26,10 @@ const ZoomControls: React.FC = () => {
     };
 
     return (
-        <div className="absolute top-3 right-3 z-50 flex flex-row gap-3 select-none">
+        <div className="flex flex-row gap-2 md:gap-3 select-none">
             {/** Zoom Out Button */}
             <button
-                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out 
+                className={`w-8 h-8 md:w-12 md:h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out text-sm md:text-base
                     ${
                         zoom <= ZOOM_LEVELS[0]
                             ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50 transition-opacity duration-300'
@@ -41,13 +41,13 @@ const ZoomControls: React.FC = () => {
                 –
             </button>
              {/** Zoom Level Display */}
-             <div className="text-white text-sm px-4 py-1 bg-gray-700 rounded shadow-md items-center flex justify-items-center">
+             <div className="text-white text-xs md:text-sm px-2 md:px-4 py-1 bg-gray-700 rounded shadow-md items-center flex justify-items-center">
                 {zoom.toFixed(2)}x
             </div>
 
             {/** Zoom In Button */}
             <button
-                className={`w-12 h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out 
+                className={`w-8 h-8 md:w-12 md:h-12 rounded flex items-center justify-center shadow transition-all duration-200 ease-in-out text-sm md:text-base
                     ${
                         zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]
                             ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-50 transition-opacity duration-300'

@@ -86,29 +86,29 @@ const StartGameModal_02: React.FC<{ onStartGame: () => void }> = ({ onStartGame 
 
     const getKeyClass = (key: string) => {
         return pressedKeys[key] 
-            ? "text-black bg-cyan-400 rounded p-1 text-center font-mono font-bold shadow-glow transition-colors duration-150"
-            : "text-white bg-gray-700 rounded p-1 text-center font-mono transition-colors duration-150";
+            ? "text-white bg-gray-600 rounded p-1 text-center font-mono font-bold shadow-inner border-2 border-gray-500 transition-all duration-150 transform scale-105"
+            : "text-white bg-gray-800 rounded p-1 text-center font-mono border-2 border-gray-700 shadow-md transition-all duration-150";
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full border-2 border-blue-400 relative">
+            <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full border-2 border-gray-600 relative">
                 {/* ✅ Movement Instructions */}
                 <div className="bg-gray-800 p-3 rounded-md mb-5 border border-gray-700 text-center">
-                    <p className="text-yellow-300 font-mono text-sm">
-                        &gt; USE <span className="text-cyan-400">W A S D</span> OR THE <span className="text-cyan-400">JOYSTICK</span> TO MOVE
+                    <p className="text-gray-300 font-mono text-sm">
+                        &gt; USE <span className="text-white font-bold">W A S D</span> OR THE <span className="text-white font-bold">JOYSTICK</span> TO MOVE
                     </p>
-                    <p className="text-blue-300 font-mono text-xs mt-1">
+                    <p className="text-gray-400 font-mono text-xs mt-1">
                         &gt; TRY PRESSING A KEY OR MOVING THE JOYSTICK
                     </p>
                 </div>
 
                 {/* ✅ WASD Key Layout */}
                 <div className="bg-gray-800 p-3 rounded-md mb-5 border border-gray-700">
-                    <p className="text-yellow-300 text-center font-mono text-sm mb-2">
+                    <p className="text-gray-300 text-center font-mono text-sm mb-2">
                         &gt; MOVEMENT CONTROLS:
                     </p>
-                    <div className="grid grid-cols-3 gap-1 max-w-[180px] mx-auto mb-2">
+                    <div className="grid grid-cols-3 gap-2 max-w-[180px] mx-auto mb-2">
                         <div className="text-center"></div>
                         <div className={getKeyClass('w')}>W</div>
                         <div className="text-center"></div>
@@ -116,7 +116,7 @@ const StartGameModal_02: React.FC<{ onStartGame: () => void }> = ({ onStartGame 
                         <div className={getKeyClass('s')}>S</div>
                         <div className={getKeyClass('d')}>D</div>
                     </div>
-                    <p className="text-green-200 text-center font-mono text-xs">
+                    <p className="text-gray-400 text-center font-mono text-xs">
                         &gt; PRESS KEYS TO TEST
                     </p>
                 </div>
@@ -133,10 +133,49 @@ const StartGameModal_02: React.FC<{ onStartGame: () => void }> = ({ onStartGame 
 
                 <div className="flex justify-center">
                     <button
-                        onClick={onStartGame}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-mono py-3 px-8 rounded-lg transition-colors duration-200 cursor-pointer border border-blue-400 hover:border-blue-300 transform"
+                        onClick={(e) => {
+                            // Disable the button to prevent multiple clicks
+                            const button = e.currentTarget as HTMLButtonElement;
+                            button.disabled = true;
+                            
+                            // Keep the button visually pressed
+                            button.style.transform = 'translateY(3px)';
+                            button.style.boxShadow = '0 1px 0 #2D3748, 0 2px 3px rgba(0, 0, 0, 0.3)';
+                            
+                            // Wait half a second before proceeding
+                            setTimeout(() => {
+                                onStartGame();
+                            }, 500);
+                        }}
+                        className="bg-gray-700 text-white font-mono py-3 px-8 rounded-lg 
+                        transition-transform duration-100 cursor-pointer 
+                        border-2 border-gray-600
+                        relative overflow-hidden
+                        embossed-button"
+                        style={{
+                            boxShadow: '0 4px 0 #2D3748, 0 5px 5px rgba(0, 0, 0, 0.3)',
+                        }}
+                        onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'translateY(3px)';
+                            e.currentTarget.style.boxShadow = '0 1px 0 #2D3748, 0 2px 3px rgba(0, 0, 0, 0.3)';
+                        }}
+                        onMouseUp={(e) => {
+                            // Only reset if not disabled
+                            if (!(e.currentTarget as HTMLButtonElement).disabled) {
+                                e.currentTarget.style.transform = '';
+                                e.currentTarget.style.boxShadow = '0 4px 0 #2D3748, 0 5px 5px rgba(0, 0, 0, 0.3)';
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            // Only reset if not disabled
+                            if (!(e.currentTarget as HTMLButtonElement).disabled) {
+                                e.currentTarget.style.transform = '';
+                                e.currentTarget.style.boxShadow = '0 4px 0 #2D3748, 0 5px 5px rgba(0, 0, 0, 0.3)';
+                            }
+                        }}
                     >
-                        &gt;&gt; LAUNCH SEQUENCE &lt;&lt;
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-b from-white to-transparent opacity-10"></span>
+                        <span className="relative z-10">&gt;&gt; LAUNCH SEQUENCE &lt;&lt;</span>
                     </button>
                 </div>
 

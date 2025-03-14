@@ -4,6 +4,7 @@ import { currentSceneAtom } from '../atoms/gameState';
 import SceneOne from '../scenes/SceneOne';
 import SceneTwo from '../scenes/SceneTwo';
 import SceneThree from '../scenes/SceneThree';
+import SceneBlank from '../scenes/SceneBlank';
 
 const SceneManager: React.FC = () => {
     const [currentScene] = useAtom(currentSceneAtom);
@@ -12,6 +13,7 @@ const SceneManager: React.FC = () => {
             {currentScene === 'scene1' && <SceneOne />}
             {currentScene === 'scene2' && <SceneTwo />}
             {currentScene === 'scene3' && <SceneThree />}
+            {currentScene === 'sceneBlank' && <SceneBlank />}
         </div>
     );
 };
