@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { sceneConfig } from './sceneConfig';
 import Campfire from '../components/Campfire';
 import CoolThing from '../components/CoolThing';
-import { useSetAtom } from 'jotai';
-import { campfireProximityAtom } from '../atoms/gameState';
+//import { useSetAtom } from 'jotai';
+//import { campfireProximityAtom } from '../atoms/gameState';
 
 // Cool thing configuration (GIF) - position is now relative to the center of the scene
 const COOL_THING = {

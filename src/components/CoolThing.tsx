@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { cameraPositionAtom, coolThingDistanceAtom, coolThingProximityAtom } from '../atoms/gameState';
-import { sceneConfig } from '../scenes/sceneConfig';
 
 // Cool thing configuration - position is relative to the center of the scene
 export const COOL_THING_CONFIG = {
@@ -18,7 +17,6 @@ const HYSTERESIS_BUFFER = 30; // Extra buffer distance to prevent rapid on/off s
 
 // Audio configuration
 const MAX_VOLUME = 0.2; // Maximum volume when closest to the cool thing
-const MIN_AUDIBLE_VOLUME = 0.01; // Minimum volume before we consider it inaudible
 
 const CoolThing: React.FC = () => {
     // Get camera position from atom

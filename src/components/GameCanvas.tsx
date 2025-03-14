@@ -39,7 +39,7 @@ const announcementStyles = `
 
 const GameCanvas: React.FC = () => {
     const cameraPos = useAtomValue(cameraPositionAtom);
-    const [currentScene, setCurrentScene] = useAtom(currentSceneAtom);
+    const [currentScene, _] = useAtom(currentSceneAtom);
     const [sceneHasCharacter, setSceneHasCharacter] = useState(false);
     const [showAnnouncement, setShowAnnouncement] = useState(false);
 

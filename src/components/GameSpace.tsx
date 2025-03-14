@@ -1,8 +1,8 @@
 import React from 'react';
 import GameCanvas from './GameCanvas';
-import DebugBar from './DebugBar';
+//import DebugBar from './DebugBar';
 import './MarqueeHeader.css';
-import MarqueeHeader from './MarqueeHeader';
+//import MarqueeHeader from './MarqueeHeader';
 
 const GameSpace: React.FC = () => {
     return (

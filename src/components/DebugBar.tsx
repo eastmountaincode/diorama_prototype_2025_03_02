@@ -1,21 +1,21 @@
 import React from 'react';
-import { useAtom } from 'jotai';
-import { 
-    cameraPositionAtom, 
-    campfireProximityAtom, 
-    campfireDistanceAtom, 
-    currentSceneAtom,
-    coolThingDistanceAtom,
-    coolThingProximityAtom
-} from '../atoms/gameState';
+// import { useAtom } from 'jotai';
+// import { 
+//     cameraPositionAtom, 
+//     campfireProximityAtom, 
+//     campfireDistanceAtom, 
+//     currentSceneAtom,
+//     coolThingDistanceAtom,
+//     coolThingProximityAtom
+// } from '../atoms/gameState';
 
 const DebugBar: React.FC = () => {
-    const [_, setCurrentScene] = useAtom(currentSceneAtom);
-    const [cameraPos] = useAtom(cameraPositionAtom); // ✅ Get camera position
-    const [isNearCampfire] = useAtom(campfireProximityAtom); // ✅ Get campfire proximity status
-    const [campfireDistance] = useAtom(campfireDistanceAtom); // ✅ Get exact distance to campfire
-    const [isNearCoolThing] = useAtom(coolThingProximityAtom); // ✅ Get cool thing proximity status
-    const [coolThingDistance] = useAtom(coolThingDistanceAtom); // ✅ Get exact distance to cool thing
+    // const [_, setCurrentScene] = useAtom(currentSceneAtom);
+    // const [cameraPos] = useAtom(cameraPositionAtom); // ✅ Get camera position
+    // const [isNearCampfire] = useAtom(campfireProximityAtom); // ✅ Get campfire proximity status
+    // const [campfireDistance] = useAtom(campfireDistanceAtom); // ✅ Get exact distance to campfire
+    // const [isNearCoolThing] = useAtom(coolThingProximityAtom); // ✅ Get cool thing proximity status
+    // const [coolThingDistance] = useAtom(coolThingDistanceAtom); // ✅ Get exact distance to cool thing
 
     return (
         <div className="h-10 bg-gray-700 text-white flex items-center text-xs px-4 gap-6 select-none">
