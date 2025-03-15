@@ -2,14 +2,14 @@ import { useState } from 'react';
 import './App.css';
 import GameSpace from './components/GameSpace';
 import StartGameModal_02 from './components/modals/StartGameModal_02';
-import ImagePreloader from './components/ImagePreloader';
+import AssetPreloader from './components/AssetPreloader';
 
 function App() {
     const [gameStarted, setGameStarted] = useState(false);
 
     return (
         <div className="w-full flex flex-col bg-gray-200" style={{ height: '100dvh' }}>
-            <ImagePreloader />
+            <AssetPreloader />
             <div className="flex-1 overflow-hidden">
                 {gameStarted ? (
                     <GameSpace />
